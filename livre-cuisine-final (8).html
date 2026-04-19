@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Livre de Cuisine</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bleu:#5B7199;--bleu-dark:#4B6088;--bleu-mid:#6880a8;--or:#c9a96e;--or-light:#d9be8a;--or-pale:rgba(201,169,110,0.15);--creme:#edeae0;--creme-doux:#c8c4b8;--creme-discret:#8d99a8;--ligne:rgba(201,169,110,0.22);--m-bg:#f5f2ea;--m-bg2:#ece8de;--m-texte:#2a2520;--m-texte2:#5a5248;--m-texte3:#8a7f72;--m-ligne:rgba(180,160,120,0.25);--m-border:rgba(180,160,120,0.3);--m-or:#a07840;}
+*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Quicksand',sans-serif;background:var(--bleu);min-height:100vh;color:var(--creme);}
+.header{background:var(--bleu-dark);padding:2.5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 15% 40%,rgba(201,169,110,.12) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 90% 15%,rgba(201,169,110,.08) 0%,transparent 55%);pointer-events:none;}
+.header::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(201,169,110,.06) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;}
+.header-eyebrow{font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--or);margin-bottom:.75rem;position:relative;z-index:1;}
+.header-title{font-family:'Libre Baskerville',serif;font-size:clamp(2rem,5vw,3.2rem);color:var(--creme);position:relative;z-index:1;}.header-title em{font-style:italic;color:var(--or);}
+.header-div{display:flex;align-items:center;justify-content:center;gap:.75rem;margin:1rem auto .6rem;max-width:250px;position:relative;z-index:1;}
+.header-div::before,.header-div::after{content:'';flex:1;height:1px;background:var(--or);opacity:.35;}.header-div span{color:var(--or);}
+.header-sub{font-size:.72rem;color:var(--creme-discret);letter-spacing:.2em;text-transform:uppercase;position:relative;z-index:1;}
+.controls{background:var(--bleu-dark);border-bottom:1px solid var(--ligne);padding:.9rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:sticky;top:0;z-index:50;box-shadow:0 4px 18px rgba(30,40,55,.25);}
+.search-pill{display:flex;align-items:center;gap:.6rem;background:rgba(255,255,255,.08);border:1px solid var(--ligne);border-radius:50px;padding:.55rem 1.2rem;flex:1;min-width:180px;transition:border-color .2s;}
+.search-pill:focus-within{border-color:rgba(201,169,110,.5);}
+.search-pill input{border:none;outline:none;background:transparent;font-family:'Quicksand',sans-serif;font-size:.9rem;font-weight:500;color:var(--creme);flex:1;}
+.search-pill input::placeholder{color:var(--creme-discret);opacity:.7;}.search-pill span{color:var(--or);opacity:.7;}
+.filter-pills{display:flex;gap:.4rem;flex-wrap:wrap;}
+.fpill{border:1px solid var(--ligne);border-radius:50px;padding:.4rem .9rem;font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;background:transparent;color:var(--creme-discret);transition:all .2s;}
+.fpill:hover{border-color:var(--or);color:var(--or);}.fpill.active{background:var(--or);color:var(--bleu-dark);border-color:var(--or);}
+.stats-row{padding:.5rem 1.5rem;display:flex;gap:1.5rem;font-size:.7rem;font-weight:600;color:var(--creme-discret);border-bottom:1px solid var(--ligne);background:rgba(75,96,136,.6);flex-wrap:wrap;}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:middle;}
+main{max-width:1060px;margin:0 auto;padding:2rem 1.25rem 8rem;}
+.section-head{display:flex;align-items:center;gap:1rem;margin:2.5rem 0 1.25rem;}
+.section-head h2{font-family:'Libre Baskerville',serif;font-size:1.25rem;font-style:italic;color:var(--or);white-space:nowrap;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--ligne);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.1rem;}
+.card{background:var(--creme);border-radius:14px;overflow:hidden;transition:transform .22s,box-shadow .22s;animation:bloom .4s ease both;}
+@keyframes bloom{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 38px rgba(30,40,55,.4);}
+.card-img{height:165px;position:relative;overflow:hidden;background:#d8d4cc;display:flex;align-items:center;justify-content:center;font-size:3.2rem;cursor:pointer;}
+.card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.card-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(80,70,60,.3));}
+.card-badge{position:absolute;top:.65rem;left:.65rem;padding:.2rem .65rem;border-radius:50px;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;}
+.card-badge.entree{background:rgba(90,160,125,.92);}.card-badge.plat{background:rgba(180,140,70,.92);}.card-badge.dessert{background:rgba(170,100,140,.92);}.card-badge.thermomix{background:rgba(60,110,180,.92);}
+.card-body{padding:.85rem 1.05rem .95rem;background:var(--creme);}
+.card-cat{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.22rem;}
+.card-cat.entree{color:#3a7a5a;}.card-cat.plat{color:#7a5a20;}.card-cat.dessert{color:#7a3060;}.card-cat.thermomix{color:#2a5888;}
+.card-name{font-family:'Libre Baskerville',serif;font-size:1.02rem;color:#2a2520;margin-bottom:.22rem;line-height:1.2;cursor:pointer;}
+.card-meta{font-size:.7rem;color:#7a6e62;display:flex;gap:.8rem;margin-bottom:.38rem;font-weight:600;}
+.card-desc{font-size:.76rem;color:#5a5248;line-height:1.42;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-style:italic;}
+.card-edit-btn{display:flex;align-items:center;gap:.28rem;margin-top:.6rem;padding:.3rem .65rem;border:1px solid rgba(160,120,60,.4);border-radius:50px;background:transparent;font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:700;color:#8a6a30;cursor:pointer;width:fit-content;transition:all .18s;}
+.card-edit-btn:hover{background:var(--or);color:#fff;border-color:var(--or);}
+.fab-group{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:.6rem;z-index:100;align-items:flex-end;}
+.fab{background:linear-gradient(135deg,var(--or),var(--or-light));color:var(--bleu-dark);border:none;border-radius:50px;padding:.85rem 1.4rem;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 6px 25px rgba(201,169,110,.4);transition:all .22s;white-space:nowrap;}
+.fab:hover{transform:translateY(-2px);}.fab-scan{background:linear-gradient(135deg,#5B7199,#6880a8);color:#fff;box-shadow:0 6px 25px rgba(75,96,136,.4);}
+.print-btn{position:fixed;bottom:1.5rem;left:1.5rem;background:transparent;color:var(--or);border:1px solid rgba(201,169,110,.4);border-radius:50px;padding:.75rem 1.2rem;font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;z-index:100;transition:all .2s;}
+.print-btn:hover{background:var(--or-pale);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(20,30,45,.72);backdrop-filter:blur(7px);z-index:200;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto;}
+.overlay.open{display:flex;}
+.modal{background:var(--m-bg);border:1px solid var(--m-border);border-radius:18px;padding:2rem;max-width:560px;width:100%;margin:auto;box-shadow:0 30px 80px rgba(15,25,40,.5);animation:slideUp .3s ease;color:var(--m-texte);}
+@keyframes slideUp{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal h2{font-family:'Libre Baskerville',serif;font-size:1.35rem;font-style:italic;color:var(--m-or);margin-bottom:1.3rem;border-bottom:1px solid var(--m-ligne);padding-bottom:.65rem;}
+.form-group{margin-bottom:.85rem;}
+.form-group label{display:block;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--m-texte3);margin-bottom:.28rem;}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:.58rem .9rem;border:1.5px solid var(--m-border);border-radius:10px;font-family:'Quicksand',sans-serif;font-size:.87rem;font-weight:500;color:var(--m-texte);outline:none;background:#fff;transition:border-color .2s,box-shadow .2s;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:rgba(160,120,60,.6);box-shadow:0 0 0 3px rgba(201,169,110,.1);}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--m-texte3);opacity:.6;}
+.form-group textarea{min-height:72px;resize:vertical;line-height:1.5;}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.scan-drop{border:3px dashed rgba(91,113,153,.4);border-radius:14px;padding:2rem 1.5rem;text-align:center;background:rgba(91,113,153,.06);cursor:pointer;position:relative;transition:all .2s;}
+.scan-drop:hover{border-color:var(--bleu);background:rgba(91,113,153,.12);}
+.scan-drop input[type=file]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;}
+.scan-drop-icon{font-size:2.5rem;margin-bottom:.5rem;}.scan-drop-text{font-size:.88rem;color:var(--m-texte2);font-weight:600;margin-bottom:.2rem;}.scan-drop-sub{font-size:.72rem;color:var(--m-texte3);}
+.scan-preview{width:100%;max-height:220px;object-fit:contain;border-radius:10px;margin-top:.75rem;display:none;}.scan-preview.show{display:block;}
+.scan-status{margin-top:1rem;padding:.75rem 1rem;border-radius:10px;font-size:.85rem;font-weight:600;display:none;}
+.scan-status.loading{display:block;background:rgba(91,113,153,.12);color:var(--bleu-dark);}
+.scan-status.success{display:block;background:rgba(90,160,125,.12);color:#2a6a48;}
+.scan-status.error{display:block;background:rgba(180,60,60,.1);color:#8a3030;}
+.photo-section{margin-bottom:.85rem;}
+.photo-section>label{display:block;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--m-texte3);margin-bottom:.48rem;}
+.photo-preview-wrap{position:relative;width:100%;height:135px;border-radius:10px;overflow:hidden;margin-bottom:.6rem;background:var(--m-bg2);display:none;align-items:center;justify-content:center;}
+.photo-preview-wrap.show{display:flex;}.photo-preview-wrap img{width:100%;height:100%;object-fit:cover;}
+.photo-remove-btn{position:absolute;top:.4rem;right:.4rem;background:rgba(160,50,50,.85);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:.78rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.photo-tabs{display:flex;border-radius:10px;overflow:hidden;border:1.5px solid var(--m-border);margin-bottom:.55rem;}
+.photo-tab{flex:1;padding:.48rem;font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;background:var(--m-bg2);color:var(--m-texte3);border:none;transition:all .18s;text-align:center;}
+.photo-tab.active{background:var(--m-or);color:#fff;}
+.upload-zone{position:relative;border:2px dashed rgba(160,120,60,.35);border-radius:10px;padding:1rem;text-align:center;background:var(--m-bg2);transition:all .2s;cursor:pointer;}
+.upload-zone:hover{border-color:var(--m-or);background:#e5dfd4;}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;}
+.upload-zone-icon{font-size:1.5rem;margin-bottom:.2rem;}.upload-zone-text{font-size:.78rem;color:var(--m-texte2);font-weight:600;}.upload-zone-sub{font-size:.68rem;color:var(--m-texte3);margin-top:.12rem;}
+.url-zone{display:flex;gap:.5rem;}
+.url-zone input{flex:1;padding:.58rem .9rem;border:1.5px solid var(--m-border);border-radius:10px;font-family:'Quicksand',sans-serif;font-size:.84rem;color:var(--m-texte);background:#fff;outline:none;}
+.url-zone-btn{padding:.58rem .95rem;background:var(--m-or);color:#fff;border:none;border-radius:10px;font-family:'Quicksand',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+.photo-hint{font-size:.67rem;color:var(--m-texte3);margin-top:.38rem;line-height:1.4;font-style:italic;}
+.modal-actions{display:flex;gap:.65rem;margin-top:1.3rem;padding-top:.95rem;border-top:1px solid var(--m-ligne);}
+.btn-save{flex:1;padding:.8rem;background:linear-gradient(135deg,var(--or),var(--or-light));color:#fff;border:none;border-radius:12px;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;}
+.btn-cancel{padding:.8rem 1.05rem;background:transparent;color:var(--m-texte2);border:1.5px solid var(--m-border);border-radius:12px;font-family:'Quicksand',sans-serif;font-size:.86rem;cursor:pointer;}
+.btn-delete{padding:.72rem .95rem;background:#fff0f0;color:#b54040;border:1.5px solid rgba(180,60,60,.25);border-radius:12px;font-family:'Quicksand',sans-serif;font-size:.83rem;font-weight:700;cursor:pointer;}
+.btn-edit{padding:.8rem 1.15rem;background:var(--m-bg2);color:var(--m-or);border:1.5px solid rgba(160,120,60,.35);border-radius:12px;font-family:'Quicksand',sans-serif;font-size:.86rem;font-weight:700;cursor:pointer;}
+.btn-edit:hover{background:var(--or);color:#fff;border-color:var(--or);}
+.btn-full{width:100%;padding:.85rem;background:linear-gradient(135deg,var(--bleu),var(--bleu-mid));color:#fff;border:none;border-radius:12px;font-family:'Quicksand',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:.75rem;}
+.btn-full:disabled{opacity:.5;cursor:not-allowed;}
+.detail-img-wrap{width:100%;height:210px;border-radius:12px;overflow:hidden;margin-bottom:1.15rem;background:var(--m-bg2);display:flex;align-items:center;justify-content:center;font-size:4.5rem;}
+.detail-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.detail-badge{display:inline-block;padding:.22rem .75rem;border-radius:50px;font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.45rem;}
+.detail-badge.entree{background:rgba(90,160,125,.15);color:#2a6a48;border:1px solid rgba(90,160,125,.3);}
+.detail-badge.plat{background:rgba(160,120,40,.12);color:#7a5a20;border:1px solid rgba(160,120,40,.3);}
+.detail-badge.dessert{background:rgba(160,80,120,.12);color:#7a3060;border:1px solid rgba(160,80,120,.3);}
+.detail-badge.thermomix{background:rgba(40,90,160,.12);color:#2a5888;border:1px solid rgba(40,90,160,.3);}
+.detail-name{font-family:'Libre Baskerville',serif;font-size:1.7rem;color:var(--m-texte);margin-bottom:.38rem;line-height:1.12;}
+.detail-meta{font-size:.78rem;color:var(--m-texte3);display:flex;gap:1.5rem;margin-bottom:1rem;font-weight:600;padding-bottom:.85rem;border-bottom:1px solid var(--m-ligne);}
+.detail-desc-text{font-size:.9rem;color:var(--m-texte2);font-style:italic;line-height:1.58;padding:.55rem .85rem;background:var(--m-bg2);border-radius:8px;margin-bottom:.85rem;}
+.detail-sec{margin-bottom:.95rem;}
+.detail-sec h3{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--m-or);margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem;}
+.detail-sec h3::after{content:'';flex:1;height:1px;background:rgba(160,120,60,.2);}
+.detail-sec p{font-size:.88rem;color:var(--m-texte2);line-height:1.72;white-space:pre-line;background:var(--m-bg2);padding:.7rem .95rem;border-radius:8px;border-left:3px solid rgba(201,169,110,.4);}
+.detail-actions{display:flex;gap:.65rem;margin-top:1.25rem;padding-top:.95rem;border-top:1px solid var(--m-ligne);}
+.empty{text-align:center;padding:3.5rem;color:var(--creme-discret);font-family:'Libre Baskerville',serif;font-style:italic;font-size:1.05rem;}
+#printArea{display:none;}
+@media print{
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+body>*:not(#printArea){display:none!important;}#printArea{display:block!important;}
+.p-cover{text-align:center;padding:4rem 2rem;page-break-after:always;min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#4B6088;}
+.p-cover h1{font-family:'Libre Baskerville',serif;font-size:3rem;font-style:italic;color:#c9a96e;margin-bottom:.5rem;}
+.p-cover .sub{color:#8d99a8;font-size:.78rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:2.5rem;}
+.p-cover-stats{display:flex;gap:1.25rem;justify-content:center;flex-wrap:wrap;}
+.p-cover-stat{background:rgba(201,169,110,.15);border:1px solid rgba(201,169,110,.3);border-radius:1rem;padding:.9rem 1.4rem;color:#c9a96e;font-weight:700;text-align:center;}
+.p-cover-stat strong{display:block;font-family:'Libre Baskerville',serif;font-size:2rem;font-style:italic;}
+.p-toc{padding:2rem;page-break-after:always;background:#f5f2ea;}
+.p-toc h2{font-family:'Libre Baskerville',serif;font-size:1.7rem;font-style:italic;color:#a07840;margin-bottom:1.4rem;padding-bottom:.6rem;border-bottom:1px solid rgba(160,120,60,.2);}
+.p-toc-row{display:flex;align-items:center;justify-content:space-between;padding:.42rem 0;border-bottom:1px dotted rgba(160,120,60,.15);font-size:.88rem;font-weight:600;color:#2a2520;}
+.p-badge{font-size:.62rem;font-weight:700;text-transform:uppercase;padding:.16rem .55rem;border-radius:.5rem;}
+.p-badge.entree{background:rgba(90,160,125,.15);color:#2a6a48;}.p-badge.plat{background:rgba(160,120,40,.12);color:#7a5a20;}.p-badge.dessert{background:rgba(160,80,120,.12);color:#7a3060;}.p-badge.thermomix{background:rgba(40,90,160,.12);color:#2a5888;}
+.p-section{padding:2rem;page-break-before:always;background:#f5f2ea;}
+.p-section-h{font-family:'Libre Baskerville',serif;font-size:1.6rem;font-style:italic;color:#a07840;padding:.7rem 1.4rem;border-left:4px solid #c9a96e;margin-bottom:1.4rem;background:#ece8de;border-radius:0 8px 8px 0;}
+.p-recipe{page-break-inside:avoid;margin-bottom:1.6rem;padding:1.2rem 1.4rem;border:1px solid rgba(160,120,60,.2);border-radius:.7rem;background:#fff;}
+.p-r-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.45rem;}.p-r-name{font-size:1.2rem;font-weight:700;color:#2a2520;}
+.p-r-meta{font-size:.75rem;color:#8a7f72;font-weight:600;margin-bottom:.7rem;display:flex;gap:1.4rem;}
+.p-r-desc{font-size:.85rem;color:#5a5248;font-style:italic;margin-bottom:.7rem;padding-bottom:.7rem;border-bottom:1px solid rgba(160,120,60,.15);}
+.p-recipe h4{font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;color:#a07840;font-weight:700;margin:.7rem 0 .28rem;}
+.p-recipe p{font-size:.85rem;color:#3a3028;line-height:1.62;white-space:pre-line;}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-eyebrow">✦ Ma Collection Culinaire ✦</div>
+  <h1 class="header-title">Mon <em>Livre</em> de Cuisine</h1>
+  <div class="header-div"><span>❧</span></div>
+  <p class="header-sub">Entrées · Plats · Desserts · Thermomix</p>
+</div>
+<div class="controls">
+  <div class="search-pill"><span>✦</span><input type="text" id="searchInput" placeholder="Rechercher une recette, un ingrédient…" oninput="renderAll()"></div>
+  <div class="filter-pills" id="filterPills"></div>
+</div>
+<div class="stats-row" id="stats"></div>
+<main><div id="recipeContainer"></div></main>
+<div class="fab-group">
+  <button class="fab fab-scan" onclick="openScanModal()">📷 Scanner une recette</button>
+  <button class="fab" onclick="openAddModal()">＋ Ajouter manuellement</button>
+</div>
+<button class="print-btn" onclick="printBook()">🖨️ Imprimer</button>
+<div id="printArea"></div>
+
+<div class="overlay" id="scanOverlay" onclick="closeOnOverlay(event,'scanOverlay')">
+  <div class="modal">
+    <h2>📷 Scanner une recette</h2>
+    <p style="font-size:.85rem;color:var(--m-texte2);margin-bottom:1rem;line-height:1.5">Photographiez votre recette — l'IA lit et remplit automatiquement tous les champs !</p>
+    <div class="scan-drop"><input type="file" id="scanFile" accept="image/*" onchange="handleScanFile(event)"><div class="scan-drop-icon">📄</div><div class="scan-drop-text">Cliquez ou glissez votre photo ici</div><div class="scan-drop-sub">Photo d'une recette manuscrite, imprimée ou écran</div><img id="scanPreview" class="scan-preview" alt="Aperçu"></div>
+    <div class="scan-status" id="scanStatus"></div>
+    <button class="btn-full" id="btnAnalyze" onclick="analyzeRecipe()" disabled>🔍 Analyser et extraire la recette</button>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('scanOverlay')">Annuler</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="formOverlay" onclick="closeOnOverlay(event,'formOverlay')">
+  <div class="modal">
+    <h2 id="formTitle">✦ Nouvelle recette</h2>
+    <div class="form-row">
+      <div class="form-group"><label>Nom de la recette</label><input type="text" id="fName" placeholder="Ex: Bœuf Bourguignon…"></div>
+      <div class="form-group"><label>Catégorie</label><select id="fCat"><option value="entree">🥗 Entrée</option><option value="plat">🍽️ Plat</option><option value="dessert">🌸 Dessert</option><option value="thermomix">⚙️ Thermomix</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>⏱ Temps</label><input type="text" id="fTime" placeholder="Ex: 45 min"></div>
+      <div class="form-group"><label>👥 Personnes</label><input type="text" id="fServings" placeholder="Ex: 4 personnes"></div>
+    </div>
+    <div class="photo-section">
+      <label>📷 Photo de la recette</label>
+      <div class="photo-preview-wrap" id="photoPreviewWrap"><img id="photoPreviewImg" src="" alt=""><button class="photo-remove-btn" onclick="removePhoto()">✕</button></div>
+      <div class="photo-tabs"><button class="photo-tab active" id="tabUpload" onclick="switchTab('upload')">📁 Mon ordi</button><button class="photo-tab" id="tabUrl" onclick="switchTab('url')">🔗 URL</button></div>
+      <div id="zoneUpload"><div class="upload-zone"><input type="file" id="fPhotoFile" accept="image/*" onchange="handleFileUpload(event)"><div class="upload-zone-icon">📷</div><div class="upload-zone-text">Cliquez ou glissez votre photo</div><div class="upload-zone-sub">JPG, PNG, WEBP</div></div></div>
+      <div id="zoneUrl" style="display:none"><div class="url-zone"><input type="text" id="fPhotoUrl" placeholder="https://…"><button class="url-zone-btn" onclick="applyUrl()">OK</button></div><p class="photo-hint">Clic droit sur une image → "Copier l'adresse de l'image"</p></div>
+    </div>
+    <div class="form-group"><label>Description courte</label><input type="text" id="fDesc" placeholder="En quelques mots…"></div>
+    <div class="form-group"><label>🧂 Ingrédients</label><textarea id="fIngredients" style="min-height:85px"></textarea></div>
+    <div class="form-group"><label>👨‍🍳 Préparation</label><textarea id="fSteps" style="min-height:105px"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('formOverlay')">Annuler</button>
+      <button class="btn-delete" id="btnDelete" style="display:none" onclick="confirmDelete()">🗑️ Supprimer</button>
+      <button class="btn-save" onclick="saveRecipe()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="detailOverlay" onclick="closeOnOverlay(event,'detailOverlay')">
+  <div class="modal" id="detailContent"></div>
+</div>
+
+<script>
+const BASE_RECIPES=[
+{id:1,name:'Bò Bún',cat:'plat',emoji:'🍜',photo:'https://www.cuisineaz.com/content/uploads/2022/11/bo-bun-1.jpg',time:'45 min',servings:'2 personnes',desc:'Plat vietnamien frais et parfumé',ingredients:"300g bœuf (filet ou rumsteck)\n150g vermicelles de riz · 1 carotte râpée · ½ concombre en lamelles\nMenthe, coriandre, ciboulette · Cacahuètes\n\n— Marinade —\n2 c. soupe nuoc mam · 1 c. soupe sucre · 1 c. soupe huile · ail · échalote · poivre\n\n— Sauce —\n3 c. soupe nuoc mam · 2 c. soupe vinaigre de riz · 2 c. soupe sucre · ½ verre eau · ail · piment",steps:"1. Couper le bœuf en lamelles, mélanger avec la marinade. Reposer 30 min minimum.\n2. Tremper les vermicelles dans eau chaude 5-7 min. Égoutter et rincer à l'eau froide.\n3. Préparer la sauce en mélangeant tous les ingrédients.\n4. Saisir le bœuf mariné à feu vif 2-3 min max.\n5. Dresser dans des bols : vermicelles, légumes, herbes, bœuf. Parsemer de cacahuètes. Sauce à part."},
+{id:2,name:'Quiche Lorraine',cat:'entree',emoji:'🥧',photo:'',time:'55 min',servings:'6 personnes',desc:'Classique française',ingredients:"1 pâte brisée · 200g lardons fumés · 3 œufs\n25cl crème fraîche · 10cl lait · 100g gruyère râpé · sel, poivre, muscade",steps:"1. Préchauffer le four à 180°C.\n2. Faire revenir les lardons à sec.\n3. Étaler la pâte dans un moule, piquer le fond.\n4. Répartir les lardons. Battre œufs, crème, lait, sel, poivre, muscade. Verser.\n5. Parsemer de gruyère. Enfourner 35-40 min."},
+{id:3,name:'Mousse au Chocolat',cat:'dessert',emoji:'🍫',photo:'',time:'20 min + 2h',servings:'6 personnes',desc:'Dessert aérien',ingredients:"200g chocolat noir 70% · 6 œufs · 30g sucre · 1 pincée de sel",steps:"1. Faire fondre le chocolat au bain-marie. Tiédir.\n2. Incorporer les jaunes un à un.\n3. Monter les blancs en neige ferme avec le sel.\n4. Ajouter le sucre, fouetter 30 sec.\n5. Incorporer les blancs délicatement en 3 fois.\n6. Réfrigérer 2h minimum."},
+{id:4,name:'Velouté de Carottes',cat:'thermomix',emoji:'🥕',photo:'',time:'25 min',servings:'4 personnes',desc:'Velouté onctueux',ingredients:"600g carottes · 1 oignon · 1L bouillon légumes\n20cl crème fraîche · 1 c. café cumin · sel, poivre",steps:"1. Oignon dans le bol. Hacher 5 sec / vit. 5.\n2. Ajouter beurre. Faire revenir 3 min / 120°C / vit. 1.\n3. Ajouter carottes, bouillon, cumin. Cuire 20 min / 100°C / vit. 1.\n4. Mixer 1 min / vit. 10 progressivement.\n5. Ajouter crème. Mixer 20 sec / vit. 5. Assaisonner."},
+{id:5,name:'Velouté de Potimarron',cat:'thermomix',emoji:'🎃',photo:'',time:'30 min',servings:'4 personnes',desc:"Velouté d'automne",ingredients:"800g potimarron (peau gardée) · 1 oignon · 1 gousse ail\n1L bouillon légumes · 20cl crème de coco · gingembre · sel, poivre",steps:"1. Couper le potimarron en cubes.\n2. Oignon et ail dans le bol. Hacher 5 sec / vit. 5.\n3. Faire revenir 3 min / 120°C / vit. 1.\n4. Ajouter potimarron, gingembre, bouillon. Cuire 22 min / 100°C / vit. 1.\n5. Mixer 1 min / vit. 10. Ajouter crème de coco. Mixer 20 sec / vit. 4. Assaisonner."},
+{id:6,name:'Risotto aux Champignons',cat:'thermomix',emoji:'🍄',photo:'',time:'35 min',servings:'4 personnes',desc:'Risotto crémeux',ingredients:"300g riz arborio · 400g champignons · 1 oignon · 2 gousses ail\n150ml vin blanc · 800ml bouillon légumes · 80g parmesan · 30g beurre",steps:"1. Oignon et ail dans le bol. Hacher 5 sec / vit. 5.\n2. Ajouter beurre. Faire revenir 3 min / 120°C / vit. 1.\n3. Ajouter champignons. Cuire 5 min / 100°C / sens inverse / vit. 1.\n4. Ajouter riz. Cuire 2 min / 100°C / sens inverse / vit. 1.\n5. Déglacer au vin blanc. Ajouter bouillon chaud.\n6. Cuire 16 min / 100°C / sens inverse / vit. 1. Incorporer parmesan. Reposer 2 min."},
+{id:7,name:"Soupe à l'Oignon",cat:'entree',emoji:'🥣',photo:'',time:'55 min',servings:'4 personnes',desc:'La classique gratinée',ingredients:"4 gros oignons jaunes · 50g beurre · 1 c. soupe farine\n150ml vin blanc · 1L bouillon bœuf\n8 tranches pain campagne · 150g gruyère râpé",steps:"1. Émincer finement les oignons.\n2. Caraméliser dans le beurre à feu doux 25 min.\n3. Saupoudrer farine, mélanger 1 min. Déglacer au vin blanc, réduire 2 min.\n4. Ajouter bouillon chaud, mijoter 20 min. Assaisonner.\n5. Verser dans des bols, ajouter pain + gruyère.\n6. Gratiner 5-7 min sous le grill."},
+{id:8,name:'Fondant au Chocolat',cat:'thermomix',emoji:'🍮',photo:'',time:'25 min',servings:'6 personnes',desc:'Cœur coulant irrésistible',ingredients:"200g chocolat noir · 150g beurre · 150g sucre\n4 œufs · 50g farine · beurre + cacao pour ramequins",steps:"1. Préchauffer le four à 200°C. Beurrer des ramequins, saupoudrer cacao.\n2. Chocolat + beurre dans le bol. Fondre 4 min / 50°C / vit. 2.\n3. Ajouter sucre, mélanger 10 sec / vit. 3. Ajouter œufs + farine. Mélanger 20 sec / vit. 4.\n4. Verser dans les ramequins. Cuire 10-12 min à 200°C.\n5. Démouler immédiatement. Servir avec glace vanille."},
+{id:9,name:'Tapenade Maison',cat:'entree',emoji:'🫒',photo:'',time:'10 min',servings:'8 personnes',desc:'Apéro provençal',ingredients:"200g olives noires dénoyautées · 50g câpres\n4 filets anchois · 1 gousse ail\n4-5 c. soupe huile d'olive · poivre noir",steps:"1. Égoutter olives, câpres et anchois.\n2. Mixer tous les ingrédients par impulsions en ajoutant l'huile progressivement.\n3. Texture granuleuse souhaitée.\n4. Assaisonner. Conserver en bocal au réfrigérateur.\n5. Servir sur des toasts grillés."},
+{id:10,name:'Gâteau au Yaourt',cat:'dessert',emoji:'🎂',photo:'',time:'45 min',servings:'8 personnes',desc:'Moelleux et inratable',ingredients:"1 yaourt nature (le pot = mesure) · 2 pots farine\n1,5 pot sucre · ½ pot huile · 3 œufs\n1 sachet levure · 1 sachet sucre vanillé",steps:"1. Préchauffer le four à 180°C. Beurrer et fariner le moule.\n2. Vider le yaourt dans un saladier.\n3. Ajouter dans l'ordre : sucre, sucre vanillé, œufs, huile, farine, levure. Mélanger entre chaque.\n4. Verser dans le moule. Enfourner 35-40 min.\n5. Vérifier avec la lame d'un couteau. Laisser tiédir avant de démouler."},
+{id:11,name:'Bœuf Bourguignon',cat:'plat',emoji:'🥩',photo:'https://img.cuisineaz.com/660x495/2013/12/20/i8721-boeuf-bourguignon.jpeg',time:'5h30',servings:'4 personnes',desc:'Le grand classique mijoté au vin de Bourgogne',ingredients:"Huile d'olive + beurre · 1 échalotte + 1 gousse d'ail\nMacreuse, gîte, joue de bœuf (1,2 kg)\n75 cl de vin de Bourgogne\n25 petits oignons grelots · 200g lardons\n300g champignons de Paris · 1 grosse carotte\n1 c. soupe farine · 1 bouquet garni · sel, poivre",steps:"1. Chauffer huile + beurre dans un fait-tout en fonte. Ajouter l'échalotte ciselée et l'ail entier.\n2. Saisir le bœuf sur toutes ses faces.\n3. Fariner la viande, poivrer. Ajouter le vin, saler, ajouter le bouquet garni. Couvrir et cuire doucement 5 heures.\n4. Cuire les oignons grelots à l'étouffée 10 min. Réserver.\n5. Faire revenir les lardons à sec. Réserver. Faire revenir les champignons dans le gras des lardons.\n6. Au bout de 3h, ajouter la carotte. Cuire 1h.\n7. Ajouter lardons, champignons et oignons. Mélanger et cuire encore 1h.\n8. Servir avec des pommes de terre ou des pâtes."},
+{id:12,name:'Vinaigrette Maison',cat:'entree',emoji:'🥗',photo:'',time:'5 min',servings:'1 saladier',desc:'La base de toutes les salades',ingredients:"1 c. café de moutarde · sel, poivre\n1 c. soupe de vinaigre (xérès, balsamique ou framboise)\n2 c. soupe d'huile d'olive · 1 échalotte finement ciselée\n💡 Version allégée : 1 c. soupe huile + 1 c. soupe eau",steps:"1. Mettre dans le saladier le sel et le poivre.\n2. Ajouter la moutarde.\n3. Ajouter le vinaigre et bien mélanger.\n4. Ajouter l'huile d'olive et mélanger vigoureusement.\n5. Ajouter l'échalotte finement ciselée.\n6. Bien mélanger. Ajouter la salade juste avant de servir."},
+{id:13,name:'Ceviche de Bar aux Agrumes',cat:'entree',emoji:'🐟',photo:'',time:'20 min + 1h',servings:'2 personnes',desc:'Frais et acidulé, cuisson par les agrumes',ingredients:"200g de filet de bar frais · 1 orange · 1 citron vert\n½ oignon rouge · ½ piment doux (facultatif)\n1 c. soupe coriandre hachée · 1 c. café huile d'olive",steps:"1. Couper le bar en dés.\n2. Presser l'orange et le citron vert. Mélanger le jus avec l'oignon rouge émincé, le piment et la coriandre.\n3. Verser sur le poisson. Ajouter l'huile d'olive.\n4. Laisser mariner 1h au réfrigérateur.\n5. Servir avec des feuilles de salade.\n💡 La cuisson se fait par l'acidité des agrumes, pas besoin de chaleur."},
+{id:14,name:'Terrine de Saumon & Épinards',cat:'entree',emoji:'🐠',photo:'',time:'50 min',servings:'4 personnes',desc:'Légère et délicate, parfaite en entrée',ingredients:"200g de filet de saumon frais · 100g d'épinards frais\n1 œuf · 50g de fromage blanc 0%\n1 c. soupe d'aneth · sel, poivre",steps:"1. Préchauffer le four à 180°C.\n2. Faire blanchir les épinards 2 min. Égoutter et hacher.\n3. Mixer le saumon avec l'œuf, le fromage blanc, l'aneth, sel et poivre.\n4. Incorporer les épinards hachés.\n5. Verser dans un moule à cake. Cuire 30 min au bain-marie.\n6. Laisser refroidir avant de démouler.\n💡 Servir avec une salade verte et une vinaigrette légère."},
+{id:15,name:"Tartare de Bœuf à l'Asiatique",cat:'entree',emoji:'🥩',photo:'',time:'20 min',servings:'6 personnes',desc:'Saveurs asiatiques, fraîcheur et caractère',ingredients:"350g de filet de rumsteck · 1 grosse échalotte\n50g de gingembre · 1 c. soupe huile de sésame grillé\n3 c. soupe sauce soja salée · ½ botte coriandre ciselée\nsel, poivre · 1 c. soupe graines de sésame",steps:"1. Couper la viande finement en petits morceaux au couteau.\n2. Ajouter l'échalotte ciselée finement.\n3. Ajouter le gingembre râpé ou coupé finement.\n4. Mélanger en ajoutant petit à petit la sauce soja.\n5. Ajouter l'huile de sésame, la coriandre et les graines de sésame.\n6. Poivrer, saler légèrement.\n7. Servir en apéro ou accompagné de pommes de terre ou de salade."},
+{id:16,name:'Filet de Cabillaud en Papillote',cat:'plat',emoji:'🐡',photo:'',time:'25 min',servings:'2 personnes',desc:'Léger, parfumé et prêt en 25 minutes',ingredients:"2 filets de cabillaud (150g chacun) · 1 courgette\n1 tomate · 1 c. soupe jus de citron\n1 c. café huile d'olive · 1 c. café aneth · sel, poivre",steps:"1. Préchauffer le four à 200°C.\n2. Couper la courgette et la tomate en fines lamelles.\n3. Déposer chaque filet sur une feuille de papier sulfurisé. Ajouter légumes, jus de citron, huile d'olive, aneth, sel et poivre.\n4. Refermer hermétiquement les papillotes.\n5. Cuire 15 min au four.\n💡 Servir avec une salade verte et une vinaigrette légère."},
+{id:17,name:'Terrine de Thon et Légumes',cat:'entree',emoji:'🐟',photo:'',time:'40 min',servings:'4 personnes',desc:'Simple, léger et savoureux',ingredients:"1 boîte de thon au naturel (200g) · 1 carotte\n1 branche de céleri · 1 œuf\n2 c. soupe yaourt grec 0% · 1 c. café ciboulette · sel, poivre",steps:"1. Préchauffer le four à 180°C.\n2. Râper la carotte et émincer le céleri.\n3. Égoutter le thon. Mélanger avec œuf, yaourt, ciboulette, sel et poivre.\n4. Ajouter carotte et céleri. Bien mélanger.\n5. Verser dans un moule à cake. Cuire 25 min au bain-marie.\n6. Laisser tiédir avant de démouler.\n💡 Servir avec des cornichons et du pain complet."},
+{id:18,name:'Riz Cantonais Léger',cat:'plat',emoji:'🍚',photo:'',time:'25 min',servings:'1 personne',desc:'Riz sauté à la chinoise, léger et savoureux',ingredients:"100g de riz thaï cuit · 1 œuf\n50g de petits pois · 1 carotte\n1 c. soupe de sauce soja légère\n1 c. café d'huile d'olive\n💡 Variante : ajouter des dés de jambon de poulet",steps:"1. Faire revenir la carotte en dés et les petits pois dans l'huile d'olive.\n2. Ajouter le riz et la sauce soja. Bien mélanger.\n3. Pousser le riz sur le côté, cuire l'œuf brouillé à côté.\n4. Mélanger le tout et servir immédiatement."},
+{id:19,name:'Salade de Papaye Verte',cat:'entree',emoji:'🥗',photo:'',time:'15 min',servings:'2 personnes',desc:'Fraîche et croquante, inspirée de la Thaïlande',ingredients:"½ papaye verte · 1 carotte · 10 cacahuètes\n1 c. soupe de jus de citron vert\n1 c. café de miel · 1 c. café de nuoc mam léger\n💡 Remplacer les cacahuètes par des amandes",steps:"1. Râper la papaye verte et la carotte.\n2. Dans un bol, mélanger le jus de citron vert, le miel et le nuoc mam.\n3. Verser la sauce sur la papaye et la carotte râpées.\n4. Mélanger et parsemer de cacahuètes concassées.\n5. Servir frais."},
+{id:20,name:'Brochettes de Bœuf Mariné',cat:'plat',emoji:'🥩',photo:'',time:'30 min',servings:'2 personnes',desc:'Saveurs coréennes, tendres et caramélisées',ingredients:"200g de bœuf (filet)\n2 c. soupe de sauce soja légère\n1 c. soupe de miel · 1 c. café d'ail haché\n1 c. café d'huile de sésame · ½ poire asiatique\n💡 La poire adoucit la marinade et attendrit la viande",steps:"1. Couper le bœuf en fines lamelles.\n2. Mélanger sauce soja, miel, ail haché et huile de sésame dans un bol.\n3. Mariner le bœuf dans ce mélange pendant 15 min minimum.\n4. Enfiler les lamelles sur des brochettes.\n5. Cuire à la poêle bien chaude 3-4 min de chaque côté.\n6. Servir avec la poire asiatique coupée en dés."},
+{id:21,name:'Bouillon de Nouilles aux Légumes',cat:'entree',emoji:'🍜',photo:'',time:'25 min',servings:'2 personnes',desc:'Réconfortant et léger, cuisine chinoise',ingredients:"1 litre de bouillon de légumes\n100g de nouilles chinoises\n½ courgette · 1 branche de céleri\n1 c. soupe de sauce soja légère\n1 c. café de gingembre râpé\n💡 Ajouter des champignons shiitake pour plus de saveur",steps:"1. Faire chauffer le bouillon de légumes avec le gingembre râpé.\n2. Ajouter la courgette et le céleri coupés en dés. Cuire 5 min.\n3. Ajouter les nouilles chinoises. Cuire 5 min.\n4. Ajouter la sauce soja. Rectifier l'assaisonnement.\n5. Servir chaud dans des bols."},
+{id:22,name:'Bananes Caramélisées au Sésame',cat:'dessert',emoji:'🍌',photo:'',time:'10 min',servings:'2 personnes',desc:'Doux et caramélisé, inspiration japonaise',ingredients:"2 bananes · 1 c. soupe de miel\n1 c. café de graines de sésame\n1 c. café de jus de citron\n💡 Servir avec une boule de glace vanille légère",steps:"1. Couper les bananes en deux dans le sens de la longueur.\n2. Dans une poêle, faire chauffer le miel avec le jus de citron.\n3. Ajouter les bananes et laisser caraméliser 2 min de chaque côté.\n4. Saupoudrer de graines de sésame.\n5. Servir immédiatement, seul ou avec une boule de glace vanille."},
+{id:23,name:'Tartare de Saumon & Avocat',cat:'entree',emoji:'🐟',photo:'',time:'15 min',servings:'2 personnes',desc:'Frais et raffiné, à consommer dans la journée',ingredients:"200g de filet de saumon frais (sushi grade)\n1 avocat mûr · ½ citron (jus)\n1 c. soupe d'aneth haché\n1 c. café d'huile d'olive\n1 c. café de sauce soja légère\nSel, poivre\n⚠️ Choisir un saumon ultra-frais, à consommer dans la journée",steps:"1. Couper le saumon en petits dés réguliers.\n2. Éplucher l'avocat et le couper en dés de même taille.\n3. Mélanger délicatement saumon, avocat, jus de citron, aneth, huile d'olive et sauce soja.\n4. Assaisonner de sel et poivre.\n5. Servir frais immédiatement avec des toasts de pain complet."},
+{id:24,name:'Les Pancakes',cat:'dessert',emoji:'🥞',photo:'',time:'45 min',servings:'4 personnes',desc:'Moelleux et légers grâce aux blancs en neige',ingredients:"2 œufs (jaunes et blancs séparés)\n150ml de lait demi-écrémé\n1 sachet de sucre vanillé · 125g de farine\n1 c. café levure chimique\n2 c. soupe de sucre · 1 pincée de sel\nHuile pour la cuisson",steps:"1. Dans un grand bol, mélanger les ingrédients secs : farine, levure, sucre, sel et sucre vanillé.\n2. Dans un autre bol, mélanger les 2 jaunes d'œufs avec le lait.\n3. Ajouter le mélange sec aux jaunes et mélanger jusqu'à obtenir une pâte épaisse. Laisser reposer 15 à 30 min.\n4. Battre les blancs en neige ferme et les incorporer délicatement à la préparation.\n5. Faire cuire dans une poêle bien chaude légèrement huilée.\n6. Retourner quand les bords sont dorés et que des petites bulles se forment sur le dessus."},
+{id:25,name:'Madeleines',cat:'dessert',emoji:'🧁',photo:'',time:'1h15',servings:'12 madeleines',desc:'La vraie recette avec la bosse parfaite',ingredients:"2 œufs · 100g de beurre fondu\n120g de farine · 1 c. café levure chimique\n30g de sucre en poudre\nBeurre + farine pour les moules",steps:"0. Beurrer et fariner les moules à madeleines.\n1. Dans un grand bol, mélanger le sucre et les œufs jusqu'à blanchiment.\n2. Ajouter la farine et la levure. Mélanger puis incorporer le beurre fondu.\n3. Répartir la pâte dans les moules.\n4. Laisser reposer 1h au réfrigérateur (étape clé pour la bosse !).\n5. Préchauffer le four à 220°C.\n6. Enfourner 4 min à 220°C jusqu'à formation de la bosse, puis baisser à 180°C et cuire encore 5 min.\n7. Démouler tiède."},
+{id:26,name:"Sardines à l'Huile au Four",cat:'plat',emoji:'🐟',photo:'',time:'25 min',servings:'2 personnes',desc:'Simple, parfumé et plein de saveurs',ingredients:"1 boîte de sardines à l'huile\n1 c. soupe de sauce soja\n1 c. soupe d'huile d'olive\nQuelques tranches fines de citron jaune\nAil frais coupé en morceaux\nCoriandre fraîche ciselée",steps:"1. Préchauffer le four à 200°C.\n2. Ouvrir la boîte de sardines, enlever l'huile de conservation.\n3. Disposer les sardines dans un plat allant au four.\n4. Ajouter l'huile d'olive, la sauce soja, les tranches de citron et l'ail.\n5. Enfourner 12 à 15 min à 200°C.\n6. À la sortie du four, parsemer de coriandre fraîche ciselée.\n7. Servir avec des pâtes ou du riz."},
+{id:27,name:"Coquilles St Jacques sur Fonds d'Artichaut",cat:'entree',emoji:'🐚',photo:'',time:'30 min',servings:'1 personne',desc:'Élégant et raffiné, parfait en entrée',ingredients:"4 noix de Saint-Jacques par personne\n4 fonds d'artichaut en boîte par personne\nBeurre clarifié\n1 peu d'eau ou de vin blanc\nSel, poivre",steps:"1. Faire chauffer le beurre clarifié dans une poêle.\n2. Cuire les fonds d'artichaut doucement, en les retournant à mi-cuisson (environ 10 min par face).\n3. Dans une autre poêle, faire chauffer le beurre clarifié et saisir les noix de Saint-Jacques.\n4. Les retourner à mi-cuisson (environ 3 min par face). Elles doivent être dorées et nacrées.\n5. Dès que c'est cuit, poser chaque noix sur un fond d'artichaut.\n6. Déglacer la poêle des Saint-Jacques avec l'eau ou le vin blanc. Saler, poivrer.\n7. Verser ce jus sur les Saint-Jacques et fonds d'artichaut. Servir immédiatement."},
+{id:28,name:'Soupe Pho Légère',cat:'entree',emoji:'🍜',photo:'',time:'30 min',servings:'2 personnes',desc:'Soupe vietnamienne légère et parfumée',ingredients:"1 litre de bouillon de volaille léger\n100g de blanc de poulet · 50g de nouilles de riz\n½ oignon · 1 branche de cannelle\n1 c. soupe de nuoc mam léger · 1 c. soupe de coriandre\n💡 Servir avec des pousses de soja",steps:"1. Faire chauffer le bouillon avec l'oignon et la cannelle.\n2. Ajouter le blanc de poulet émincé et les nouilles de riz. Cuire 10 min.\n3. Ajouter le nuoc mam et la coriandre ciselée.\n4. Servir chaud dans des bols avec des pousses de soja."},
+{id:29,name:'Wok de Légumes aux Nouilles Soba',cat:'plat',emoji:'🍜',photo:'',time:'25 min',servings:'2 personnes',desc:'Wok japonais savoureux et coloré',ingredients:"100g de nouilles soba · 1 poivron\n1 carotte · 100g de champignons shiitake\n1 c. soupe de sauce soja légère\n1 c. café d'huile de sésame\n💡 Ajouter des graines de courge pour le croquant",steps:"1. Cuire les nouilles soba selon les instructions. Égoutter.\n2. Faire revenir le poivron en lamelles, la carotte en julienne et les champignons dans un wok bien chaud.\n3. Ajouter les nouilles et la sauce soja. Mélanger 2 min.\n4. Parsemer d'huile de sésame avant de servir."},
+{id:30,name:'Yakitori de Poulet',cat:'plat',emoji:'🍗',photo:'',time:'25 min',servings:'2 personnes',desc:'Brochettes japonaises laquées et savoureuses',ingredients:"2 blancs de poulet · 2 c. soupe de sauce soja légère\n1 c. soupe de mirin · 1 c. café de sucre\n1 c. café de gingembre râpé · 1 c. soupe d'huile d'olive\n💡 Accompagner de salade de chou asiatique",steps:"1. Couper le poulet en morceaux réguliers.\n2. Mélanger la sauce soja, le mirin, le sucre et le gingembre râpé dans un bol.\n3. Enfiler les morceaux de poulet sur des brochettes.\n4. Badigeonner généreusement de sauce.\n5. Cuire à la poêle ou au grill en badigeonnant régulièrement jusqu'à belle coloration."},
+{id:31,name:'Curry Vert Léger au Poulet',cat:'plat',emoji:'🍛',photo:'',time:'40 min',servings:'2 personnes',desc:'Curry thaïlandais parfumé et léger',ingredients:"2 blancs de poulet · 1 boîte de lait de coco léger\n1 c. soupe de pâte de curry vert\n1 aubergine · 1 c. soupe de sauce poisson légère\n1 c. café de sucre · 1 c. soupe d'huile d'olive\n💡 Servir avec du riz basmati",steps:"1. Couper le poulet et l'aubergine en dés.\n2. Faire revenir la pâte de curry vert dans l'huile d'olive 1 min à feu moyen.\n3. Ajouter le poulet et l'aubergine. Faire revenir 3 min.\n4. Verser le lait de coco, la sauce poisson et le sucre.\n5. Laisser mijoter à feu doux 15 min jusqu'à ce que le poulet soit bien cuit.\n6. Servir chaud avec du riz basmati."},
+{id:32,name:'Salade de Chou Asiatique',cat:'entree',emoji:'🥗',photo:'',time:'15 min',servings:'2 personnes',desc:'Fraîche et croquante, inspiration coréenne',ingredients:"¼ de chou chinois · 1 carotte\n1 c. soupe de vinaigre de riz\n1 c. café de miel · 1 c. café d'huile de sésame\n1 c. café de graines de sésame\n💡 Ajouter des dés de pomme pour une touche sucrée",steps:"1. Émincer finement le chou chinois et râper la carotte.\n2. Dans un bol, mélanger le vinaigre de riz, le miel et l'huile de sésame pour faire la vinaigrette.\n3. Verser la vinaigrette sur le chou et la carotte. Bien mélanger.\n4. Parsemer de graines de sésame.\n5. Servir frais immédiatement ou après 15 min de repos au frigo."},
+{id:33,name:'Boulettes de Poisson Vapeur',cat:'entree',emoji:'🐟',photo:'',time:'25 min',servings:'2 personnes',desc:'Légères et délicates, inspiration chinoise',ingredients:"200g de filet de cabillaud · 1 blanc d'œuf\n1 c. café de gingembre râpé\n1 c. soupe de ciboulette\n1 c. café de sauce soja légère\n1 c. café d'huile de sésame\n💡 Servir avec des légumes vapeur et du riz thaï",steps:"1. Mixer le cabillaud jusqu'à obtenir une farce lisse.\n2. Ajouter le blanc d'œuf, le gingembre râpé, la ciboulette ciselée et la sauce soja. Bien mélanger.\n3. Former des petites boulettes avec les mains mouillées.\n4. Disposer dans un panier vapeur et cuire 10 min à la vapeur.\n5. Arroser d'un filet d'huile de sésame avant de servir."},
+{id:34,name:'Rouleaux de Printemps Vietnamiens',cat:'entree',emoji:'🌿',photo:'',time:'30 min',servings:'2 personnes',desc:'Frais et légers, une entrée vietnamienne classique',ingredients:"4 galettes de riz · 100g de crevettes cuites\n½ avocat · ½ carotte · ¼ de concombre\n1 c. soupe de menthe fraîche\n1 c. soupe de coriandre\nSauce nuoc mam légère\n💡 Remplacer les crevettes par du poulet si préféré",steps:"1. Faire tremper les galettes de riz une par une dans de l'eau tiède jusqu'à ce qu'elles soient souples.\n2. Couper l'avocat, la carotte et le concombre en bâtonnets fins.\n3. Étaler la galette sur un plan de travail. Disposer les crevettes, les légumes et les herbes au centre.\n4. Replier les côtés de la galette puis rouler serré.\n5. Servir immédiatement avec la sauce nuoc mam légère."},
+{id:35,name:'Soupe Miso aux Légumes',cat:'entree',emoji:'🍵',photo:'',time:'25 min',servings:'2 personnes',desc:'Apaisante et nourrissante, recette japonaise authentique',ingredients:"1 litre de bouillon dashi léger · 2 c. soupe de pâte miso\n100g de tofu soyeux · 1 carotte\n1 branche de céleri\n1 c. soupe d'algues wakame\n1 c. soupe d'oignon vert\n💡 Éviter l'ébullition pour préserver les nutriments du miso",steps:"1. Faire chauffer le bouillon dashi. Ajouter la carotte et le céleri coupés en petits dés. Cuire 10 min.\n2. Diluer la pâte miso dans une louche de bouillon chaud pour éviter les grumeaux.\n3. Ajouter le miso dilué au reste du bouillon. Ne pas faire bouillir.\n4. Ajouter le tofu en dés et les algues wakame. Chauffer doucement 5 min.\n5. Parsemer d'oignon vert ciselé avant de servir."},
+{id:36,name:'Pad Thaï Léger aux Crevettes',cat:'plat',emoji:'🍤',photo:'',time:'35 min',servings:'2 personnes',desc:'Le classique thaïlandais revisité en version légère',ingredients:"100g de nouilles de riz · 100g de crevettes décortiquées\n1 œuf · ½ courgette en julienne\n1 c. soupe de sauce poisson légère\n1 c. soupe de tamarin · 1 c. café de sucre de palme\n1 c. soupe de cacahuètes concassées\n1 c. soupe d'huile d'arachide\n💡 Remplacer les cacahuètes par des amandes pour moins de calories",steps:"1. Faire tremper les nouilles de riz dans de l'eau tiède 20 min. Égoutter.\n2. Couper la courgette en julienne. Faire revenir les crevettes et la courgette dans l'huile. Réserver.\n3. Battre l'œuf dans la poêle, cuire en omelette fine, couper en lamelles.\n4. Dans la même poêle, mélanger les nouilles avec la sauce poisson, le tamarin et le sucre de palme.\n5. Ajouter les crevettes, la courgette, l'œuf et les cacahuètes. Mélanger et servir chaud."},
+{id:37,name:'Poulet Teriyaki Léger',cat:'plat',emoji:'🍗',photo:'',time:'35 min',servings:'2 personnes',desc:'Caramélisé et savoureux, recette japonaise incontournable',ingredients:"2 blancs de poulet (300g) · ½ poivron rouge\n2 c. soupe de sauce soja légère\n1 c. soupe de mirin · 1 c. café de miel\n1 c. café de gingembre râpé · 1 gousse d'ail\n1 c. café d'huile de sésame\n1 c. soupe de graines de sésame\n💡 Servir avec riz complet et brocolis vapeur",steps:"1. Couper le poulet en dés et le poivron en lamelles.\n2. Mélanger la sauce soja, le mirin, le miel, le gingembre râpé et l'ail haché dans un bol.\n3. Faire revenir le poulet dans l'huile de sésame à feu vif jusqu'à coloration.\n4. Ajouter le poivron et cuire 3 min.\n5. Verser la sauce teriyaki, mélanger et laisser caraméliser 5 min à feu moyen.\n6. Parsemer de graines de sésame avant de servir."},
+{id:38,name:'Fricassée de Veau à la Crème de Cidre',cat:'plat',emoji:'🥩',photo:'',time:'1h30',servings:'4 personnes',desc:'Plat normand généreux et savoureux',ingredients:"Épaule de veau en morceaux 10x10cm (3 morceaux/personne)\n1 bouteille de cidre fruité · 4 échalotes\n1 verre de calvados (ou rhum)\n200g de crème fraîche épaisse\n400g de champignons de Paris · 100g de lardons fumés\nHuile d'olive · sel, poivre",steps:"1. Dans une cocotte en fonte, saisir les morceaux de veau sur toutes les faces. Retirer et réserver.\n2. Ciseler les échalotes, les faire revenir dans le suc de cuisson de la viande.\n3. Remettre les morceaux de veau sur les échalotes.\n4. Chauffer le calvados dans une casserole, l'enflammer et verser sur la viande. Laisser se consumer.\n5. Ajouter le cidre pour couvrir la viande. Mijoter à couvert environ 45 min.\n6. Faire revenir les lardons à sec. Réserver. Faire revenir les champignons émincés dans le gras des lardons.\n7. Quand le veau est cuit, le retirer. Ajouter la crème à la sauce, laisser réduire. Remettre la viande, les lardons et les champignons. Réchauffer.\n8. Servir avec des pâtes, du riz ou des pommes de terre."},
+{id:39,name:'Pot au Feu',cat:'plat',emoji:'🥘',photo:'',time:'3h30',servings:'6 personnes',desc:'Le grand classique de la cuisine française mijotée',ingredients:"Macreuse, gîte et/ou paleron + os à moelle\n2-3 grosses carottes · Pommes de terre\n1 navet · 2 poireaux · 1 oignon · Ail\nBouquet garni (thym et laurier)\nSel, poivre\n💡 Meilleur réchauffé le lendemain !",steps:"1. Couper la viande en gros morceaux et les saisir à la poêle avec un peu d'huile.\n2. Mettre les morceaux de viande dans le faitout.\n3. Déglacer la poêle avec un peu d'eau ou de vin blanc et ajouter sur la viande.\n4. Couper l'oignon en deux, brûler les faces coupées à la poêle sèche. Ajouter dans le faitout.\n5. Couvrir d'eau froide, saler, poivrer, ajouter le bouquet garni. Cuire 2h à feu doux. Écumer régulièrement.\n6. Ajouter les légumes, les os à moelle et les pommes de terre. Cuire encore 1h30 à feu doux.\n7. Servir avec moutarde forte, vinaigrette ou mayonnaise."},
+{id:40,name:'Marinade Blanc de Poulet',cat:'plat',emoji:'🍗',photo:'',time:'2h30',servings:'3 personnes',desc:'Brochettes de poulet marinées au yaourt et épices',ingredients:"3 blancs de poulet · 150g de yaourt nature\n1 c. café de concentré de tomate · 1 jus de citron\n2-3 gousses d'ail · 2 c. soupe d'huile d'olive\n1 c. café paprika · 1 c. café cumin\n½ c. café coriandre · ¼ c. café gingembre\n1 c. café piment · 1 c. café sel",steps:"1. Mélanger tous les ingrédients de la marinade dans un grand bol : yaourt, concentré de tomate, jus de citron, ail pressé, huile d'olive et toutes les épices.\n2. Couper les blancs de poulet en morceaux réguliers.\n3. Intégrer les morceaux de poulet dans la marinade. Bien enrober.\n4. Laisser mariner au minimum 2h au réfrigérateur (toute une nuit c'est encore mieux).\n5. Enfiler sur des brochettes.\n6. Cuire au barbecue ou à la poêle-grill jusqu'à belle coloration."},
+{id:41,name:'Clafoutis aux Cerises',cat:'dessert',emoji:'🍒',photo:'',time:'1h',servings:'6 personnes',desc:'Le classique limousin, fondant et parfumé',ingredients:"800g de cerises · 250ml de lait\n50g de crème liquide entière · 150g de farine\n150g de sucre · 60g de beurre\n3 œufs · 1 sachet de sucre vanillé · 1 pincée de sel",steps:"1. Dénoyauter les cerises, les mettre dans un saladier avec 50g de sucre. Mélanger et laisser macérer 30 min.\n2. Dans un autre saladier, mélanger la farine, 100g de sucre, le sel et le sucre vanillé.\n3. Creuser un puits au centre, casser les 3 œufs. Mélanger du centre vers les bords au fouet pour obtenir une pâte lisse.\n4. Incorporer le beurre fondu refroidi, mélanger. Ajouter la crème liquide, mélanger. Ajouter le lait petit à petit tout en mélangeant.\n5. Ajouter les cerises macérées à la pâte.\n6. Beurrer et fariner un moule de 20cm de diamètre. Verser la préparation.\n7. Préchauffer le four à 205°C. Enfourner 20 min puis baisser à 190°C durant 20 min.\n8. Laisser tiédir avant de démouler. Déguster !"},
+{id:42,name:'Marinade Côtes de Porc',cat:'plat',emoji:'🥩',photo:'',time:'1h15',servings:'5 personnes',desc:'Côtes de porc laquées aux saveurs asiatiques',ingredients:"5 côtes de porc (échine ou première)\n4 c. soupe de sauce soja\n3 c. soupe de sauce huître\n½ c. café d'huile de sésame\n💡 Pour le porc, mieux vaut bien cuire !",steps:"1. Mélanger la sauce soja, la sauce huître et l'huile de sésame dans un bol.\n2. Mettre les côtes de porc dans un plat ou un sac congélation et les enduire généreusement du mélange.\n3. Laisser mariner minimum 1h au réfrigérateur (idéalement une nuit).\n4. Griller au four préchauffé à 200°C ou sur le barbecue.\n5. Retourner à mi-cuisson et badigeonner à nouveau de marinade.\n6. Bien vérifier la cuisson : le porc doit être cuit à cœur."},
+{id:43,name:'Coquilles St Jacques Gratinées',cat:'entree',emoji:'🐚',photo:'',time:'35 min',servings:'2 personnes',desc:'Élégante entrée gratinée, parfaite pour les grandes occasions',ingredients:"6 à 8 noix de Saint-Jacques · 8 champignons de Paris\nEmmental râpé · 15cl de lait\n1 noix de beurre · 1 c. soupe de farine\nSel, poivre, noix de muscade\n1 citron · Ciboulette · Huile d'olive",steps:"Étape 1 — Les Saint-Jacques :\nPoêler les noix de Saint-Jacques avec un filet d'huile d'olive, 2-3 min de chaque côté. Saler, poivrer. Réserver.\n\nÉtape 2 — La béchamel :\nFaire fondre le beurre dans une casserole. Ajouter la farine, mélanger et laisser cuire 1 min. Verser le lait progressivement en fouettant jusqu'à épaississement. Ajouter un peu de muscade.\n\nÉtape 3 — Les champignons :\nNettoyer et émincer les champignons. Les faire revenir dans l'huile d'olive. Incorporer à la béchamel.\n\nÉtape 4 — Gratinage :\nGarnir les coquilles avec les noix de Saint-Jacques. Napper de béchamel aux champignons. Parsemer d'emmental râpé. Cuire au four à 180°C durant 10 min puis passer sous le grill pour gratiner.\n\nPour finir :\nCiseler la ciboulette, faire des suprêmes de citron. Parsemer sur les coquilles et poivrer."},
+];
+
+const SK='livre_cuisine_ajouts_v3',SKP='livre_cuisine_photos_v3';
+const CATS={entree:{label:'Entrée',emoji:'🥗',color:'#3a7a5a'},plat:{label:'Plat',emoji:'🍽️',color:'#7a5a20'},dessert:{label:'Dessert',emoji:'🌸',color:'#7a3060'},thermomix:{label:'Thermomix',emoji:'⚙️',color:'#2a5888'}};
+let userRecipes=[],recipes=[],activeFilter='all',editingId=null,currentPhoto=null,scanImageBase64=null;
+
+function loadUserRecipes(){try{const raw=localStorage.getItem(SK);if(raw){userRecipes=JSON.parse(raw);const pr=localStorage.getItem(SKP);if(pr){const photos=JSON.parse(pr);userRecipes.forEach(r=>{if(r.photo&&r.photo.startsWith('__p_'))r.photo=photos[r.id]||'';})}}}catch(e){userRecipes=[];}mergeRecipes();}
+function mergeRecipes(){const ids=new Set(userRecipes.map(r=>r.id));recipes=[...BASE_RECIPES.filter(r=>!ids.has(r.id)),...userRecipes].filter(r=>!r._deleted).sort((a,b)=>a.id-b.id);}
+function saveUserRecipes(){try{const l=userRecipes.map(r=>({...r,photo:r.photo&&r.photo.startsWith('data:')?`__p_${r.id}`:(r.photo||'')}));localStorage.setItem(SK,JSON.stringify(l));const p={};userRecipes.forEach(r=>{if(r.photo&&r.photo.startsWith('data:'))p[r.id]=r.photo;});localStorage.setItem(SKP,JSON.stringify(p));}catch(e){try{localStorage.setItem(SK,JSON.stringify(userRecipes.map(r=>({...r,photo:r.photo&&r.photo.startsWith('data:')?'':(r.photo||'')}))));}catch(e2){}}}
+
+function renderAll(){
+  renderFilters();renderStats();
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const f=recipes.filter(r=>(activeFilter==='all'||r.cat===activeFilter)&&(!q||r.name.toLowerCase().includes(q)||(r.ingredients||'').toLowerCase().includes(q)||(r.desc||'').toLowerCase().includes(q)));
+  const cont=document.getElementById('recipeContainer');
+  if(!f.length){cont.innerHTML='<div class="empty">Aucune recette trouvée…</div>';return;}
+  if(activeFilter!=='all'){cont.innerHTML='<div class="grid" id="mg"></div>';f.forEach((r,i)=>{const c=makeCard(r);c.style.animationDelay=(i*.04)+'s';document.getElementById('mg').appendChild(c);});}
+  else{cont.innerHTML='';Object.entries(CATS).forEach(([cat,info])=>{const items=f.filter(r=>r.cat===cat);if(!items.length)return;const s=document.createElement('div');s.innerHTML=`<div class="section-head"><h2>${info.emoji} ${info.label}s</h2></div><div class="grid"></div>`;items.forEach((r,i)=>{const c=makeCard(r);c.style.animationDelay=(i*.04)+'s';s.querySelector('.grid').appendChild(c);});cont.appendChild(s);});}
+}
+function makeCard(r){
+  const info=CATS[r.cat]||CATS.plat;const div=document.createElement('div');div.className='card';
+  const img=(r.photo&&!r.photo.startsWith('__'))?`<img src="${r.photo}" alt="${r.name}" onerror="this.style.display='none'"><div class="card-img-overlay"></div>`:`<span style="font-size:3.2rem">${r.emoji||'🍽️'}</span>`;
+  div.innerHTML=`<div class="card-img">${img}<span class="card-badge ${r.cat}">${info.label}</span></div><div class="card-body"><div class="card-cat ${r.cat}">${info.label}</div><div class="card-name">${r.name}</div><div class="card-meta">${r.time?`<span>⏱ ${r.time}</span>`:''}${r.servings?`<span>👥 ${r.servings}</span>`:''}</div>${r.desc?`<div class="card-desc">${r.desc}</div>`:''}<button class="card-edit-btn" onclick="event.stopPropagation();openEditModal(${r.id})">✏️ Modifier</button></div>`;
+  div.querySelector('.card-img').addEventListener('click',()=>openDetail(r.id));div.querySelector('.card-name').addEventListener('click',()=>openDetail(r.id));return div;
+}
+function renderFilters(){
+  const c={all:recipes.length};Object.keys(CATS).forEach(k=>c[k]=recipes.filter(r=>r.cat===k).length);
+  const p=document.getElementById('filterPills');p.innerHTML='';
+  const a=document.createElement('button');a.className='fpill'+(activeFilter==='all'?' active':'');a.textContent=`Toutes (${c.all})`;a.onclick=()=>setFilter('all');p.appendChild(a);
+  Object.entries(CATS).forEach(([cat,info])=>{const b=document.createElement('button');b.className='fpill'+(activeFilter===cat?' active':'');b.textContent=`${info.label}s (${c[cat]})`;b.onclick=()=>setFilter(cat);p.appendChild(b);});
+}
+function renderStats(){
+  const c={};Object.keys(CATS).forEach(k=>c[k]=0);recipes.forEach(r=>{if(c[r.cat]!==undefined)c[r.cat]++;});
+  document.getElementById('stats').innerHTML=`<span><span class="dot" style="background:var(--or)"></span>${recipes.length} recettes</span>`+Object.entries(CATS).map(([k,v])=>`<span><span class="dot" style="background:${v.color}"></span>${c[k]} ${v.label.toLowerCase()}${c[k]>1?'s':''}</span>`).join('');
+}
+function setFilter(c){activeFilter=c;renderAll();}
+function switchTab(t){document.getElementById('tabUpload').classList.toggle('active',t==='upload');document.getElementById('tabUrl').classList.toggle('active',t==='url');document.getElementById('zoneUpload').style.display=t==='upload'?'block':'none';document.getElementById('zoneUrl').style.display=t==='url'?'block':'none';}
+function handleFileUpload(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>showPhotoPreview(ev.target.result);r.readAsDataURL(f);}
+function applyUrl(){const u=document.getElementById('fPhotoUrl').value.trim();if(u)showPhotoPreview(u);}
+function showPhotoPreview(src){currentPhoto=src;document.getElementById('photoPreviewImg').src=src;document.getElementById('photoPreviewWrap').classList.add('show');document.getElementById('fPhotoUrl').value='';document.getElementById('fPhotoFile').value='';}
+function removePhoto(){currentPhoto=null;document.getElementById('photoPreviewWrap').classList.remove('show');document.getElementById('photoPreviewImg').src='';document.getElementById('fPhotoFile').value='';document.getElementById('fPhotoUrl').value='';}
+function openScanModal(){scanImageBase64=null;document.getElementById('scanFile').value='';document.getElementById('scanPreview').classList.remove('show');document.getElementById('scanPreview').src='';document.getElementById('scanStatus').className='scan-status';document.getElementById('scanStatus').textContent='';document.getElementById('btnAnalyze').disabled=true;document.getElementById('scanOverlay').classList.add('open');}
+function handleScanFile(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{scanImageBase64=ev.target.result;document.getElementById('scanPreview').src=scanImageBase64;document.getElementById('scanPreview').classList.add('show');document.getElementById('btnAnalyze').disabled=false;document.getElementById('scanStatus').className='scan-status';};r.readAsDataURL(f);}
+async function analyzeRecipe(){
+  if(!scanImageBase64)return;
+  const btn=document.getElementById('btnAnalyze'),st=document.getElementById('scanStatus');
+  btn.disabled=true;st.className='scan-status loading';st.textContent="🔍 Analyse en cours… L'IA lit votre recette…";
+  try{
+    const b64=scanImageBase64.split(',')[1],mt=scanImageBase64.split(';')[0].split(':')[1];
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:'Analyse cette image de recette et extrais les informations. Réponds UNIQUEMENT en JSON valide sans texte ni backticks : {"name":"Nom","cat":"entree|plat|dessert|thermomix","time":"Temps total","servings":"X personnes","desc":"Description courte","ingredients":"Ingrédients avec quantités, un par ligne","steps":"Étapes numérotées, une par ligne"}. cat : entree (entrées/salades/soupes/terrines), plat (plats principaux/viandes/poissons), dessert (gâteaux/tartes), thermomix (recettes Thermomix). Si pas une recette : name:"NON_RECETTE".'}]}]})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error?.message||'Erreur API');
+    const text=data.content?.[0]?.text||'';const jm=text.match(/\{[\s\S]*\}/);if(!jm)throw new Error('Format invalide');
+    const parsed=JSON.parse(jm[0]);if(parsed.name==='NON_RECETTE')throw new Error("Aucune recette détectée dans l'image");
+    st.className='scan-status success';st.textContent=`✅ Recette "${parsed.name}" extraite !`;
+    setTimeout(()=>{closeModal('scanOverlay');openAddModal();document.getElementById('fName').value=parsed.name||'';document.getElementById('fCat').value=parsed.cat||'plat';document.getElementById('fTime').value=parsed.time||'';document.getElementById('fServings').value=parsed.servings||'';document.getElementById('fDesc').value=parsed.desc||'';document.getElementById('fIngredients').value=parsed.ingredients||'';document.getElementById('fSteps').value=parsed.steps||'';},1200);
+  }catch(err){st.className='scan-status error';st.textContent=`❌ ${err.message}`;btn.disabled=false;}
+}
+function resetForm(){['fName','fTime','fServings','fDesc','fIngredients','fSteps','fPhotoUrl'].forEach(id=>document.getElementById(id).value='');document.getElementById('fPhotoFile').value='';removePhoto();switchTab('upload');}
+function openAddModal(){editingId=null;currentPhoto=null;document.getElementById('formTitle').textContent='✦ Nouvelle recette';document.getElementById('btnDelete').style.display='none';document.getElementById('fCat').value='plat';resetForm();document.getElementById('formOverlay').classList.add('open');}
+function openEditModal(id){
+  const r=recipes.find(x=>x.id===id);if(!r)return;
+  editingId=id;currentPhoto=(r.photo&&!r.photo.startsWith('__'))?r.photo:null;
+  document.getElementById('formTitle').textContent='✏️ Modifier la recette';document.getElementById('btnDelete').style.display='block';
+  document.getElementById('fName').value=r.name||'';document.getElementById('fCat').value=r.cat||'plat';document.getElementById('fTime').value=r.time||'';document.getElementById('fServings').value=r.servings||'';document.getElementById('fDesc').value=r.desc||'';document.getElementById('fIngredients').value=r.ingredients||'';document.getElementById('fSteps').value=r.steps||'';document.getElementById('fPhotoUrl').value='';document.getElementById('fPhotoFile').value='';
+  switchTab('upload');if(currentPhoto)showPhotoPreview(currentPhoto);else removePhoto();closeModal('detailOverlay');document.getElementById('formOverlay').classList.add('open');
+}
+function saveRecipe(){
+  const name=document.getElementById('fName').value.trim();if(!name){document.getElementById('fName').style.borderColor='rgba(180,60,60,.6)';return;}
+  const cat=document.getElementById('fCat').value;
+  const data={name,cat,emoji:CATS[cat]?.emoji||'🍽️',photo:currentPhoto||'',time:document.getElementById('fTime').value.trim(),servings:document.getElementById('fServings').value.trim(),desc:document.getElementById('fDesc').value.trim(),ingredients:document.getElementById('fIngredients').value.trim(),steps:document.getElementById('fSteps').value.trim()};
+  if(editingId){const i=userRecipes.findIndex(r=>r.id===editingId);if(i!==-1)userRecipes[i]={...userRecipes[i],...data};else userRecipes.push({id:editingId,...data});}
+  else userRecipes.push({id:Date.now(),...data});
+  saveUserRecipes();mergeRecipes();closeModal('formOverlay');renderAll();
+}
+function confirmDelete(){
+  if(!editingId||!confirm('Supprimer cette recette définitivement ?'))return;
+  const isBase=BASE_RECIPES.some(r=>r.id===editingId);
+  if(isBase){const i=userRecipes.findIndex(r=>r.id===editingId);if(i!==-1)userRecipes[i]._deleted=true;else userRecipes.push({id:editingId,_deleted:true,name:'',cat:'entree',emoji:'',photo:'',time:'',servings:'',desc:'',ingredients:'',steps:''});}
+  else userRecipes=userRecipes.filter(r=>r.id!==editingId);
+  saveUserRecipes();mergeRecipes();closeModal('formOverlay');renderAll();
+}
+function openDetail(id){
+  const r=recipes.find(x=>x.id===id);if(!r)return;const info=CATS[r.cat]||CATS.plat;
+  const img=(r.photo&&!r.photo.startsWith('__'))?`<div class="detail-img-wrap"><img src="${r.photo}" alt="${r.name}" onerror="this.parentElement.innerHTML='<span style=font-size:4rem>${r.emoji||'🍽️'}</span>'"></div>`:`<div class="detail-img-wrap">${r.emoji||'🍽️'}</div>`;
+  document.getElementById('detailContent').innerHTML=`${img}<span class="detail-badge ${r.cat}">${info.emoji} ${info.label}</span><div class="detail-name">${r.name}</div><div class="detail-meta">${r.time?`<span>⏱ ${r.time}</span>`:''}${r.servings?`<span>👥 ${r.servings}</span>`:''}</div>${r.desc?`<div class="detail-desc-text">${r.desc}</div>`:''}${r.ingredients?`<div class="detail-sec"><h3>🧂 Ingrédients</h3><p>${r.ingredients}</p></div>`:''}${r.steps?`<div class="detail-sec"><h3>👨‍🍳 Préparation</h3><p>${r.steps}</p></div>`:''}<div class="detail-actions"><button class="btn-cancel" onclick="closeModal('detailOverlay')">Fermer</button><button class="btn-edit" onclick="openEditModal(${r.id})">✏️ Modifier</button></div>`;
+  document.getElementById('detailOverlay').classList.add('open');
+}
+function printBook(){
+  if(!recipes.length){alert('Aucune recette !');return;}
+  const c={};Object.keys(CATS).forEach(k=>c[k]=0);recipes.forEach(r=>{if(c[r.cat]!==undefined)c[r.cat]++;});
+  const today=new Date().toLocaleDateString('fr-FR',{year:'numeric',month:'long',day:'numeric'});
+  let html=`<div class="p-cover"><h1>Mon Livre de Cuisine</h1><p class="sub">— Collection personnelle · ${today} —</p><div class="p-cover-stats">${Object.entries(CATS).map(([k,v])=>`<div class="p-cover-stat"><strong>${c[k]}</strong>${v.label}s</div>`).join('')}</div></div><div class="p-toc"><h2>Table des matières</h2>`;
+  Object.keys(CATS).forEach(cat=>recipes.filter(r=>r.cat===cat).forEach(r=>{html+=`<div class="p-toc-row"><span>${r.emoji||'🍽️'} ${r.name}</span><span class="p-badge ${cat}">${CATS[cat].label}</span></div>`;}));
+  html+=`</div>`;
+  Object.entries(CATS).forEach(([cat,info])=>{const list=recipes.filter(r=>r.cat===cat);if(!list.length)return;html+=`<div class="p-section"><div class="p-section-h">${info.emoji} ${info.label}s</div>`;list.forEach(r=>{html+=`<div class="p-recipe"><div class="p-r-head"><span>${r.emoji||'🍽️'}</span><span class="p-r-name">${r.name}</span></div><div class="p-r-meta">${r.time?`<span>⏱ ${r.time}</span>`:''}${r.servings?`<span>👥 ${r.servings}</span>`:''}</div>${r.desc?`<div class="p-r-desc">${r.desc}</div>`:''}${r.ingredients?`<h4>Ingrédients</h4><p>${r.ingredients}</p>`:''}${r.steps?`<h4>Préparation</h4><p>${r.steps}</p>`:''}</div>`;});html+=`</div>`;});
+  document.getElementById('printArea').innerHTML=html;setTimeout(()=>window.print(),200);
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function closeOnOverlay(e,id){if(e.target.id===id)closeModal(id);}
+loadUserRecipes();renderAll();
+</script>
+</body>
+</html>
